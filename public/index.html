@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>Electri Phi Handbook</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#07120d;color:#eafff1;font:16px system-ui}
+main{max-width:920px;margin:auto;padding:32px 18px}h1{color:#6dff9c}form{display:flex;gap:8px}
+input{flex:1;padding:14px;border:1px solid #2c6842;border-radius:10px;background:#0e2117;color:white}
+button{padding:0 20px;border:0;border-radius:10px;background:#42d879;color:#04140a;font-weight:800}
+.card{margin:18px 0;padding:18px;border:1px solid #2c6842;border-radius:14px;background:#0d1c14}
+.tags{color:#74e89c}.label{font-weight:800;color:#9effbd}.source{color:#8fd9ff}
+</style></head><body><main><h1>Electri Phi Handbook</h1>
+<p>Search sourced electronic knowledge, restoration notes, parts, measurements, and models.</p>
+<form id="search"><input id="q" placeholder="capacitors, solar radio, RP-706…" autofocus><button>Search</button></form>
+<section id="results"></section></main>
+<script>
+const form=document.querySelector("#search"),q=document.querySelector("#q"),out=document.querySelector("#results");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+form.addEventListener("submit",async e=>{e.preventDefault();out.textContent="Searching…";
+ const r=await fetch("/api/search?q="+encodeURIComponent(q.value));const d=await r.json();
+ out.innerHTML=d.cards?.length?d.cards.map(c=>`<article class="card"><h2>${esc(c.title)}</h2>
+ <p>${esc(c.summary)}</p><p><span class="label">Original observation:</span> ${esc(c.originalText)}</p>
+ <p><span class="label">Engineering interpretation:</span> ${esc(c.engineeringNotes||"Not added")}</p>
+ <p><span class="label">Fact check:</span> ${esc(c.factCheck)} · confidence ${esc(c.confidence)}</p>
+ <p class="tags">${esc([...(c.topics||[]),...(c.components||[]),...(c.models||[])].join(" · "))}</p>
+ <a class="source" href="${esc(c.sourceUrl)}" target="_blank" rel="noopener">Open source</a></article>`).join("")
+ :"<p>No cards found yet.</p>";});
+</script></body></html>
