@@ -1,0 +1,15 @@
+{
+  "name": "electri-phi-handbook",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply electri-phi-handbook --local",
+    "db:remote": "wrangler d1 migrations apply electri-phi-handbook --remote"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260920.0",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.38.0"
+  }
+}
